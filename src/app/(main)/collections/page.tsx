@@ -1,6 +1,6 @@
 "use client";
 import { CollectionService } from "@/core/service/CollectionsService";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ICollectionListResponseModel } from "@/core/models/ICollectionModel";
 import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -16,16 +16,16 @@ const CollectionsPage = () => {
   const collectionsState = useCollectionStore((state) => state.collections);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(15);
-
-  useEffect(() => {}, []);
+  const prevRowsPerPageRef = useRef(15);
 
   useEffect(() => {
-    if (page == 0 && collections?.meta?.pageSize === rowsPerPage && collectionsState) {
+    if (page == 0 && collectionsState && rowsPerPage && prevRowsPerPageRef.current === rowsPerPage) {
       setCollections(collectionsState);
       setLoading(false);
     } else {
       getAllCollections(page, rowsPerPage);
     }
+    prevRowsPerPageRef.current = rowsPerPage;
   }, [page, rowsPerPage]);
 
   const handleChangePage = (event: unknown, newPage: number) => {

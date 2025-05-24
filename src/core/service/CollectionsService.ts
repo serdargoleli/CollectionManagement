@@ -8,7 +8,7 @@ export class CollectionService {
     const queryParams = `page=${page + 1}&pageSize=${perpage}`;
     const fetchGetData = await axiosInstance().get(`${ENDPOINTS_PATH.COLLECTIONS}?${queryParams}`);
     const response = fetchGetData.data as ICollectionListResponseModel;
-    console.log(response);
+
     if (response.meta.page == 1 && useCollectionStore.getState().collections == null) {
       useCollectionStore.getState().setCollections(response);
     }

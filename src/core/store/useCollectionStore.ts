@@ -1,13 +1,8 @@
 import { create } from "zustand";
 import { ICollectionListResponseModel } from "@/core/models/ICollectionModel";
+import { ICollectionStoreModel } from "@/core/models/store/ICollectionStoreModel";
 
-interface CollectionStore {
-  collections: ICollectionListResponseModel | null;
-  setCollections: (data: ICollectionListResponseModel) => void;
-  getCollections: () => ICollectionListResponseModel | null;
-}
-
-export const useCollectionStore = create<CollectionStore>((set, get) => ({
+export const useCollectionStore = create<ICollectionStoreModel>((set, get) => ({
   collections: null,
 
   setCollections: (data: ICollectionListResponseModel) => {
