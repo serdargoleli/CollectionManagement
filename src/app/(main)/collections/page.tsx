@@ -2,7 +2,6 @@
 
 import { CollectionService } from "@/core/service/CollectionsService";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { ICollectionListResponseModel } from "@/core/models/ICollectionModel";
 import { Box, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -11,20 +10,17 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { NAVIGATION } from "@/core/constants/navigation";
 
 const CollectionsPage = () => {
-  const { data: session } = useSession();
-  const token = session?.accessToken;
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<ICollectionListResponseModel | null>(null);
   const __collectionService = new CollectionService();
 
   useEffect(() => {
-    if (!token) return;
     getAllCollections();
-  }, [token]);
+  }, []);
 
   const getAllCollections = async () => {
     setLoading(true);
-    const response: ICollectionListResponseModel = await __collectionService.getAllCollections(token);
+    const response: ICollectionListResponseModel = await __collectionService.getAllCollections();
     setCollections(response);
     setLoading(false);
   };

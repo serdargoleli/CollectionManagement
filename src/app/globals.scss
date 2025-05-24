@@ -1,10 +1,11 @@
+@use "@/assets/scss/login";
+@use "@/assets/scss/layout";
+@use "@/assets/scss/header";
+@use "@/assets/scss/sidebar";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "@/assets/scss/login";
-@import "@/assets/scss/layout";
-@import "@/assets/scss/header";
-@import "@/assets/scss/sidebar";
+
 
 * {
   @apply text-base;
