@@ -21,7 +21,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { MUISidebarDrawlerProps } from "@/core/models/ui/ISidebarDrawler";
 
 const drawerWidth = 270;
@@ -75,6 +75,7 @@ const Drawer = styled(MuiDrawer, {
 
 const MUISidebarDrawler: React.FC<MUISidebarDrawlerProps> = ({ menuItems, open, toggleDrawer }) => {
   const theme = useTheme();
+  const pathname = usePathname();
   const router = useRouter();
 
   return (
@@ -108,6 +109,11 @@ const MUISidebarDrawler: React.FC<MUISidebarDrawlerProps> = ({ menuItems, open, 
                   sx={{
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
+                    bgcolor: pathname.startsWith(item.path) ? "primary.main" : "transparent",
+                    color: pathname.startsWith(item.path) ? "primary.contrastText" : "inherit",
+                    "&:hover": {
+                      bgcolor: pathname.startsWith(item.path) ? "primary.dark" : "action.hover",
+                    },
                   }}
                 >
                   <ListItemIcon
@@ -115,6 +121,7 @@ const MUISidebarDrawler: React.FC<MUISidebarDrawlerProps> = ({ menuItems, open, 
                       minWidth: 0,
                       mr: open ? 3 : "auto",
                       justifyContent: "center",
+                      color: pathname.startsWith(item.path) ? "primary.contrastText" : "inherit",
                     }}
                   >
                     {item.icon}
