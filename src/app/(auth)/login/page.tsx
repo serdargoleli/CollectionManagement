@@ -18,7 +18,7 @@ const LoginPage = () => {
   useEffect(() => {
     setError(null);
   }, []);
-  Â;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
