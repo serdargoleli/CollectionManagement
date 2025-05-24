@@ -1,0 +1,18 @@
+.login-page {
+  @apply flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4;
+
+  &-card {
+    @apply w-full max-w-md rounded-lg bg-white p-8 shadow-md border border-gray-200;
+  }
+
+  .card-header {
+    @apply mb-6;
+    &-title {
+      @apply mb-1 text-xl font-semibold
+    }
+
+    &-subtitle {
+      @apply text-sm text-gray-600;
+    }
+  }
+}

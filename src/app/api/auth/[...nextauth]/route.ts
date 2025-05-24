@@ -1,9 +1,9 @@
 // app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { IResponseModel } from "@/models/IResponseModel";
-import { ILoginResponseModel } from "@/models/ILoginResponseModel";
-import { ENDPOINTS_PATH } from "@/constants/endpoints";
+import { IResponseModel } from "@/core/models/IResponseModel";
+import { ILoginResponseModel } from "@/core/models/ILoginResponseModel";
+import { ENDPOINTS_PATH } from "@/core/constants/endpoints";
 
 const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
@@ -26,10 +26,12 @@ const handler = NextAuth({
             }),
           });
 
-          if (!response.ok) return null;
+          if (!response.ok) {
+            const errorRes = await response.json();
+            throw new Error(errorRes.message || "Giriş başarısız");
+          }
 
           const resJson: IResponseModel<ILoginResponseModel> = await response.json();
-
           if (resJson.status === 0 && resJson.data) {
             return {
               id: credentials.username,
@@ -38,16 +40,15 @@ const handler = NextAuth({
               refreshToken: resJson.data.refreshToken,
             };
           }
-          return null;
+          throw new Error(resJson.message || "Giriş başarısız");
         } catch (error) {
-          console.error("Login error:", error);
-          return null;
+          throw new Error(error instanceof Error ? error.message : "Bilinmeyen hata");
         }
       },
     }),
   ],
   pages: {
-    signIn: "/login", // Login sayfan
+    signIn: "/login",
   },
   session: {
     strategy: "jwt",

@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "@/assets/scss/login";
+
+
+* {
+  @apply text-base;
+}
+
+
+body {
+  font-family: Poppins, Helvetica, sans-serif
+}

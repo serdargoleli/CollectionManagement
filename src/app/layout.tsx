@@ -1,13 +1,13 @@
 "use client";
 
 import { Poppins } from "next/font/google";
-import "./globals.css";
+import "./globals.scss";
 import { SessionProvider } from "next-auth/react";
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: "100",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
