@@ -1,70 +1,120 @@
 "use client";
-
 import { CollectionService } from "@/core/service/CollectionsService";
 import { useEffect, useState } from "react";
 import { ICollectionListResponseModel } from "@/core/models/ICollectionModel";
-import { Box, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { CircularProgress, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import Link from "@mui/material/Link";
+
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { NAVIGATION } from "@/core/constants/navigation";
+import { useCollectionStore } from "@/core/store/useCollectionStore";
+import NextLink from "next/link";
 
 const CollectionsPage = () => {
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<ICollectionListResponseModel | null>(null);
-  const __collectionService = new CollectionService();
+  const collectionsState = useCollectionStore((state) => state.collections);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    getAllCollections();
-  }, []);
+    if (page == 0 && collections?.meta?.pageSize === rowsPerPage && collectionsState) {
+      setCollections(collectionsState);
+      setLoading(false);
+    } else {
+      getAllCollections(page, rowsPerPage);
+    }
+  }, [page, rowsPerPage]);
 
-  const getAllCollections = async () => {
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    setPage(0);
+  };
+
+  const getAllCollections = async (page = 0, perPage = 15) => {
     setLoading(true);
-    const response: ICollectionListResponseModel = await __collectionService.getAllCollections();
+    const __collectionService = new CollectionService();
+    const response: ICollectionListResponseModel = await __collectionService.getAllCollections(page, perPage);
     setCollections(response);
     setLoading(false);
   };
 
   return (
     <div>
-      {loading ? (
-        <Box className="flex flex-col items-center justify-center gap-y-2 pt-5">
-          <CircularProgress />
-          <Typography>Kayıtlar yükleniyor...</Typography>
-        </Box>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} className="text-sm">
-            <TableHead className="bg-gray-100">
-              <TableRow>
-                <TableCell>Ürün No</TableCell>
-                <TableCell>Koleksiyon Adı</TableCell>
-                <TableCell>Ürün Açıklaması</TableCell>
-                <TableCell>Satış Kanalı</TableCell>
-                <TableCell align="center">İşlemler</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {collections?.data.map((row) => (
-                <TableRow key={row.info.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                  <TableCell component="th" scope="row">
-                    {row.id}
-                  </TableCell>
-                  <TableCell>{row.info.name}</TableCell>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} className="text-sm">
+          <TableHead className="bg-gray-100">
+            <TableRow>
+              <TableCell>Ürün No</TableCell>
+              <TableCell>Koleksiyon Adı</TableCell>
+              <TableCell>Ürün Açıklaması</TableCell>
+              <TableCell>Satış Kanalı</TableCell>
+              <TableCell align="center">İşlemler</TableCell>
+            </TableRow>
+          </TableHead>
 
-                  <TableCell dangerouslySetInnerHTML={{ __html: row.info.description }} style={{ fontSize: "inherit", margin: 0, padding: 0 }} />
-                  <TableCell>{row.salesChannelId}</TableCell>
-                  <TableCell align="center">
-                    <Link href={NAVIGATION.COLLECTION_EDIT(row.id)}>
-                      <BorderColorIcon fontSize="small" />
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
+          {loading ? (
+            <TableBody className="flex flex-col items-center justify-center gap-y-2 pt-5">
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <div className="flex flex-col items-center justify-center gap-y-3">
+                    <CircularProgress />
+                    <Typography>Kayıtlar yükleniyor...</Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
             </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+          ) : (
+            <>
+              <TableBody>
+                {collections?.data.map((row) => (
+                  <TableRow key={row.info.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                    <TableCell component="th" scope="row">
+                      {row.id}
+                    </TableCell>
+                    <TableCell>{row.info.name}</TableCell>
+
+                    <TableCell dangerouslySetInnerHTML={{ __html: row.info.description }} style={{ fontSize: "inherit", margin: 0, padding: 0 }} />
+                    <TableCell>{row.salesChannelId}</TableCell>
+                    <TableCell align="center">
+                      <NextLink href={NAVIGATION.COLLECTION_EDIT(row.id)}>
+                        <BorderColorIcon fontSize="small" />
+                      </NextLink>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[15, 25, 50]}
+                    colSpan={5}
+                    count={collections?.meta?.totalCount || 0}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    slotProps={{
+                      select: {
+                        native: true,
+                      },
+                    }}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    labelRowsPerPage="Sayfa başına satır:"
+                    labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count !== -1 ? count : `${to}'den fazla`}`}
+                  />
+                </TableRow>
+              </TableFooter>
+            </>
+          )}
+        </Table>
+      </TableContainer>
     </div>
   );
 };
