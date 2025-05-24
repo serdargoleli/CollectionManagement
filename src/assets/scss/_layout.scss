@@ -1,0 +1,27 @@
+$sidebar-width: 270px;
+$sidebar-closed-width: 70px;
+
+.layout-page {
+  @apply flex justify-between items-start w-full max-w-full h-screen;
+
+  &.sidebar-closed {
+    .main-content {
+      width: calc(100% - $sidebar-closed-width);
+    }
+  }
+
+  .sidebar {
+    @apply bg-gray-100 p-4;
+  }
+
+  .main-content {
+    width: calc(100% - $sidebar-width);
+
+
+    .page-content {
+      @apply px-6 py-4 overflow-x-scroll;
+
+    }
+
+  }
+}

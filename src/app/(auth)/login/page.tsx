@@ -7,7 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { NAVIGATION } from "@/core/constants/navigation";
 
-export default function LoginPage() {
+const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("web.serdargoleli@gmail.com");
   const [password, setPassword] = useState("vk$allcgij7RHy6FVbAoC%Tc&WDk4K");
@@ -18,7 +18,7 @@ export default function LoginPage() {
   useEffect(() => {
     setError(null);
   }, []);
-
+  Â;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -79,4 +79,6 @@ export default function LoginPage() {
       </div>
     </div>
   );
-}
+};
+
+export default LoginPage;
