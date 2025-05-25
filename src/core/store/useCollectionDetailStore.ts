@@ -1,13 +1,6 @@
 import { create } from "zustand";
 import { IProductDetailModel } from "@/core/models/ICollectionDetailModel";
-
-interface CollectionDetailState {
-  constants: IProductDetailModel[];
-  addToConstants: (product: IProductDetailModel) => void;
-  removeFromConstants: (productCode: string) => void;
-  clearConstants: () => void;
-  isInConstants: (productCode: string, colorCode: string) => boolean;
-}
+import { CollectionDetailState } from "@/core/models/store/ICollectionStoreModel";
 
 export const useCollectionDetail = create<CollectionDetailState>((set, get) => ({
   constants: [],

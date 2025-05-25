@@ -1,7 +1,7 @@
 "use client";
 
-import Sidebar from "@/components/sidebar";
-import Header from "@/components/header";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
 import { useState } from "react";
 
 export default function MainLayout({ children }: Readonly<{ children: React.ReactNode }>) {
