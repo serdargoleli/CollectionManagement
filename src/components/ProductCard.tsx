@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-import { IProductDetailModel } from "@/core/models/ICollectionDetailModel";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import { useCollectionDetail } from "@/core/store/useCollectionDetailStore"; // Store'u import et
-
-interface ProductCardProps {
-  product: IProductDetailModel;
-  isConstant?: boolean; // Sabit kartı mı yoksa normal kart mı
-}
+import { useCollectionDetail } from "@/core/store/useCollectionDetailStore";
+import { ProductCardProps } from "@/core/models/ui/ProductCardProps"; // Store'u import et
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, isConstant = false }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Store'dan fonksiyonları al
   const { addToConstants, removeFromConstants, isInConstants } = useCollectionDetail();
   const inConstants = isInConstants(product.productCode, product.colorCode);
 
