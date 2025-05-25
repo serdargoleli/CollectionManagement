@@ -5,7 +5,7 @@ export const renderSelectedFilters = ({ selectedValues, filterData }: SelectedFi
   if (!filterData?.data || filterData === null) return null;
 
   return (
-    <Stack direction="row" spacing={1} flexWrap="wrap" mt={2}>
+    <Stack direction="row" spacing={1} flexWrap="wrap">
       {Object.entries(selectedValues).map(([filterId, selectedValue]) => {
         const filter = filterData.data.find((f) => f.id === filterId);
         const value = filter?.values.find((v) => v.value === selectedValue);

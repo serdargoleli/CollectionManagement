@@ -125,7 +125,6 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   // @dnd-kit drag end handler
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
     if (active.id !== over?.id) {
       const oldIndex = constants.findIndex((item) => `${item.productCode}-${item.colorCode}` === active.id);
       const newIndex = constants.findIndex((item) => `${item.productCode}-${item.colorCode}` === over?.id);
@@ -210,6 +209,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
       <Drawer anchor={"right"} open={filterVisibleDrawler} onClose={() => setFilterVisibleDrawer(false)}>
         <div className="grid w-[400px] grid-cols-1 gap-4 overflow-y-scroll p-8">
           <Typography variant="h5">Filtreleme</Typography>
+          {/*TODO: Çok fazla filtreleme olduğu için ilk 5 tanesinin yeterli olduğunu düşünerek onları gösterdim @serdargoleli*/}
           {filterData?.data.slice(0, 5).map((filter) => (
             <FormControl key={filter.id} style={{ minWidth: 200 }}>
               <InputLabel id={`label-${filter.id}`}>{filter.title}</InputLabel>

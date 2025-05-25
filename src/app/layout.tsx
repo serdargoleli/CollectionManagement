@@ -13,6 +13,10 @@ const poppins = Poppins({
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="tr">
+      <head>
+        <link rel="icon" type="image/webp" href="/secil.webp" />
+        <title>Serdar GÖLELİ ~ SECİL STORE Koleksiyon Yönetimi</title>
+      </head>
       <body className={`${poppins.variable} antialiased`}>
         <SessionProvider>{children}</SessionProvider>
       </body>
