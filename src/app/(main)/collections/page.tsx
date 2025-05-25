@@ -41,7 +41,7 @@ const CollectionsPage = () => {
   const getAllCollections = async (page = 0, perPage = 15) => {
     setLoading(true);
     const __collectionService = new CollectionService();
-    const response: ICollectionListResponseModel = await __collectionService.getAllCollections(page, perPage);
+    const response: ICollectionListResponseModel = await __collectionService.list(page, perPage);
     setCollections(response);
     setLoading(false);
   };

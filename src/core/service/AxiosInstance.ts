@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
 export const axiosInstance = () => {
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -23,5 +23,14 @@ export const axiosInstance = () => {
     (error) => Promise.reject(error),
   );
 
+  instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      if (error.response?.status === 401) {
+        await signOut({ callbackUrl: "/login" });
+      }
+      return Promise.reject(error);
+    },
+  );
   return instance;
 };

@@ -2,6 +2,8 @@
 @use "@/assets/scss/layout";
 @use "@/assets/scss/header";
 @use "@/assets/scss/sidebar";
+@use "@/assets/scss/product-card";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,4 +21,21 @@ body {
 
 .MuiTableCell-root p {
   @apply text-sm;
+}
+
+.edit-page {
+  @apply grid grid-cols-12 gap-4;
+  .collections-cards {
+    @apply col-span-1 mt-4 grid gap-4 md:grid-cols-3;
+  }
+  .constants-cards {
+    @apply grid grid-cols-1 gap-4 md:grid-cols-2;
+  }
+
+  .constants-box{
+    @apply rounded-lg border border-gray-200 bg-gray-300/10 p-6 shadow-md;
+  }
+  .not-item-box {
+    @apply flex h-64 items-center justify-center rounded-lg border-2 border-dashed border-gray-300;
+  }
 }

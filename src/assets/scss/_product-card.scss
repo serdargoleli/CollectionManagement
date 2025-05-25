@@ -1,0 +1,46 @@
+
+.product-card {
+  @apply relative h-full w-full max-w-sm transform transition-all duration-500;
+  &-content {
+    @apply relative h-full overflow-hidden rounded-3xl border border-white/20 bg-white/90 shadow-xl;
+
+    .product-card-header {
+      @apply absolute left-4 right-4 top-4 z-20 flex justify-between;
+    }
+
+    .product-card-body {
+      @apply relative h-80 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100;
+      .product-card-image {
+        @apply h-full w-full object-cover transition-transform duration-700;
+      }
+
+      .product-card-overlay {
+        @apply absolute inset-0 bg-black/20 backdrop-blur-sm transition-all duration-500 flex items-center justify-center;
+
+        .add-toggle-button {
+          @apply flex translate-y-4 transform items-center gap-2 rounded-full bg-white/90 px-6 py-3 font-semibold text-gray-800 shadow-xl transition-all duration-500 hover:scale-105 hover:bg-white group-hover:translate-y-0;
+        }
+      }
+    }
+
+    .product-card-footer {
+      @apply space-y-4 p-6;
+      .product-title {
+        @apply text-lg font-bold text-gray-800;
+      }
+
+    }
+  }
+
+  .isb2b {
+    @apply rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 px-3 py-1 text-xs font-bold text-white shadow-lg;
+  }
+
+  .isConstants {
+    @apply rounded-full bg-gradient-to-r from-amber-500 to-orange-600 px-3 py-1 text-xs font-bold text-white shadow-lg;
+  }
+
+  .outOfStock {
+    @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium;
+  }
+}

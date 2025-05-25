@@ -23,6 +23,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { usePathname, useRouter } from "next/navigation";
 import { MUISidebarDrawlerProps } from "@/core/models/ui/ISidebarDrawler";
+import NextLink from "next/link";
 
 const drawerWidth = 270;
 
@@ -84,7 +85,7 @@ const MUISidebarDrawler: React.FC<MUISidebarDrawlerProps> = ({ menuItems, open, 
         <DrawerHeader className="py-6">
           {open && (
             <Typography variant="h6" noWrap>
-              LOGO
+              serdargoleli
             </Typography>
           )}
           <IconButton onClick={toggleDrawer}>{open ? theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon /> : <MenuIcon />}</IconButton>
@@ -103,31 +104,31 @@ const MUISidebarDrawler: React.FC<MUISidebarDrawlerProps> = ({ menuItems, open, 
               }
             >
               {group.items.map((item, index) => (
-                <ListItemButton
-                  key={index}
-                  onClick={() => router.push(item.path)}
-                  sx={{
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                    bgcolor: pathname.startsWith(item.path) ? "primary.main" : "transparent",
-                    color: pathname.startsWith(item.path) ? "primary.contrastText" : "inherit",
-                    "&:hover": {
-                      bgcolor: pathname.startsWith(item.path) ? "primary.dark" : "action.hover",
-                    },
-                  }}
-                >
-                  <ListItemIcon
+                <NextLink href={item.path} key={index}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                      bgcolor: pathname.startsWith(item.path) ? "primary.main" : "transparent",
                       color: pathname.startsWith(item.path) ? "primary.contrastText" : "inherit",
+                      "&:hover": {
+                        bgcolor: pathname.startsWith(item.path) ? "primary.dark" : "action.hover",
+                      },
                     }}
                   >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                        color: pathname.startsWith(item.path) ? "primary.contrastText" : "inherit",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
+                  </ListItemButton>
+                </NextLink>
               ))}
             </List>
           ))}
