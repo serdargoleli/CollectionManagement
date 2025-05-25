@@ -13,4 +13,5 @@ export interface CollectionDetailState {
   removeFromConstants: (productCode: string) => void;
   clearConstants: () => void;
   isInConstants: (productCode: string, colorCode: string) => boolean;
+  reorderConstants: (sourceIndex: number, destinationIndex: number) => void;
 }

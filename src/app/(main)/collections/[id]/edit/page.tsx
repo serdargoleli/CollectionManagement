@@ -1,9 +1,25 @@
 "use client";
 import React, { use, useEffect, useState } from "react";
+import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CollectionService } from "@/core/service/CollectionsService";
 import { IResponseModel } from "@/core/models/IResponseModel";
 import { IProductDetailModel, IProductListData } from "@/core/models/ICollectionDetailModel";
-import { Alert, Button, Card, CircularProgress, Drawer, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Card,
+  CircularProgress,
+  Drawer,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Snackbar,
+  SnackbarCloseReason,
+  Typography,
+} from "@mui/material";
 import ProductCard from "@/components/ProductCard";
 import { useCollectionDetail } from "@/core/store/useCollectionDetailStore";
 import { IFilterItemModel } from "@/core/models/ICollectionFilterModel";
@@ -11,13 +27,20 @@ import { renderSelectedFilters } from "@/components/SelectedFilter";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
-  const { constants, clearConstants } = useCollectionDetail();
+  const { constants, clearConstants, reorderConstants } = useCollectionDetail();
   const __collectionService = new CollectionService();
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState<IResponseModel<IProductListData> | null>(null);
   const [filterData, setFilterData] = useState<IResponseModel<IFilterItemModel[]> | null>(null);
   const [filterVisibleDrawler, setFilterVisibleDrawer] = useState(false);
   const [selectedValues, setSelectedValues] = useState<Record<string, string>>({});
+  const [alertMessageOpen, setAlertMessageOpen] = useState(false);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   useEffect(() => {
     getCollectionDetail();
@@ -59,7 +82,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const resetFilter = () => {
     setSelectedValues({});
     setFilterVisibleDrawer(false);
-    getCollectionDetail(); // TODO:  Daha iyisi yapılabilir ama zaman kısıtlaması nedeniyle bu şekilde kaldı :)
+    getCollectionDetail();
   };
 
   const applyFilters = () => {
@@ -68,7 +91,18 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     setFilterVisibleDrawer(false);
   };
 
-  // TODO:  Daha iyisi yapılabilir ama zaman kısıtlaması nedeniyle bu şekilde kaldı artık :)
+  const alertOpen = () => {
+    setAlertMessageOpen(true);
+  };
+
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertMessageOpen(false);
+  };
+
   const buildFilterPayload = (selectedValues: Record<string, string>, filterData: IResponseModel<IFilterItemModel[]> | null, page = 1, pageSize = 36) => {
     if (!filterData?.data) return { additionalFilters: [], page, pageSize };
 
@@ -87,6 +121,23 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
       pageSize,
     };
   };
+
+  // @dnd-kit drag end handler
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      const oldIndex = constants.findIndex((item) => `${item.productCode}-${item.colorCode}` === active.id);
+      const newIndex = constants.findIndex((item) => `${item.productCode}-${item.colorCode}` === over?.id);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        reorderConstants(oldIndex, newIndex);
+      }
+    }
+  };
+
+  // Sortable items için unique ID'ler
+  const sortableItems = constants.map((product) => `${product.productCode}-${product.colorCode}`);
 
   return (
     <div className="edit-page">
@@ -125,7 +176,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
                 <Button variant="outlined" color="error" size="small" onClick={clearConstants}>
                   Tümünü Temizle
                 </Button>
-                <Button variant="contained" size="small">
+                <Button variant="contained" size="small" onClick={alertOpen}>
                   Kaydet
                 </Button>
               </div>
@@ -137,11 +188,20 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
           ) : (
             <div className="h-[750px] overflow-y-scroll p-4">
-              <div className="constants-cards">
-                {constants.map((product: IProductDetailModel, index: any) => (
-                  <ProductCard key={`constant-${index}-${product.productCode}`} product={product} isConstant={true} />
-                ))}
-              </div>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={sortableItems} strategy={verticalListSortingStrategy}>
+                  <div className="constants-cards">
+                    {constants.map((product: IProductDetailModel, index: number) => (
+                      <ProductCard
+                        key={`constant-${index}-${product.productCode}`}
+                        product={product}
+                        isConstant={true}
+                        sortableId={`${product.productCode}-${product.colorCode}`}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             </div>
           )}
         </div>
@@ -173,6 +233,8 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
       </Drawer>
+
+      <Snackbar open={alertMessageOpen} autoHideDuration={6000} onClose={handleClose} message="Kaydetme İşlemi Başarılı!" />
     </div>
   );
 };

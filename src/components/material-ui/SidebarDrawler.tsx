@@ -52,7 +52,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(2.23, 2),
   ...theme.mixins.toolbar,
 }));
 

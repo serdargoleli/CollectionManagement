@@ -25,6 +25,19 @@ export const useCollectionDetail = create<CollectionDetailState>((set, get) => (
     });
   },
 
+  reorderConstants: (sourceIndex: number, destinationIndex: number) => {
+    set((state) => {
+      const newConstants = Array.from(state.constants);
+      const [reorderedItem] = newConstants.splice(sourceIndex, 1);
+      newConstants.splice(destinationIndex, 0, reorderedItem);
+
+      return {
+        ...state,
+        constants: newConstants,
+      };
+    });
+  },
+
   clearConstants: () => {
     set({ constants: [] });
   },
