@@ -1,7 +1,6 @@
 ## 📁 Ana Klasörü Yapısı
 
 # [@serdargoleli](https://www.serdargoleli.com) SecilStore Colelction Management Case Proje Structured.
- 
 
 ```plaintext
 public/
@@ -19,4 +18,16 @@ src/                        # Uygulama kaynak kodları
 └── middleware/             # Middleware dosyası auth ve route guard kontrolü için
 
 ```
- 
+
+## 🐳 Docker ile Çalıştırma
+
+### Kurulum ve Çalıştırma
+
+1. **Deploy klasörüne gidin:**
+    ```bash
+      cd deploy
+    ```
+2. **Run**
+    ```bash
+      docker-compose up
+    ```

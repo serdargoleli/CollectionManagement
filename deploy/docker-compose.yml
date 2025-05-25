@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  serdargoleli_secilstore:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: serdargoleli-secilstore
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BASE_URL=https://maestro-api-dev.secil.biz
+      - NEXTAUTH_SECRET=123asdas123adkgkmekdacaslkcalkjfnöasdncöm
+      - NEXTAUTH_URL=http://localhost:3000
